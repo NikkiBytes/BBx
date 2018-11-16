@@ -11,18 +11,18 @@
 #SBATCH -e /projects/niblab/bids_projects/Experiments/bbx/error_files/fprep_%a_ses-1_err.txt
 
 
-id="sub-00${SLURM_ARRAY_TASK_ID}"
+sub="sub-00${SLURM_ARRAY_TASK_ID}"
 
 
-singularity exec -B /:/home_dir /projects/niblab/bids_projects/Singularity_Containers/fmriprep.simg fmriprep /home_dir/projects/niblab/bids_projects/Experiments/bbx/BIDS/ses-1 /home_dir/projects/niblab/bids_projects/Experiments/bbx/fmriprep/$id/ses-1 \
+singularity exec -B /projects/niblab/bids_projects/:/home_dir /projects/niblab/bids_projects/Singularity_Containers/fmriprep.simg fmriprep /home_dir/Experiments/bbx/BIDS/ses-1 /home_dir/projects/niblab/bids_projects/Experiments/bbx/fmriprep/$sub/ses-1 \
     participant  \
-    --participant-label $id  \
-    --fs-license-file /home_dir/projects/niblab/bids_projects/freesurfer/license.txt \
+    --participant-label $sub  \
+    --fs-license-file /home_dir/freesurfer/license.txt \
     --fs-no-reconall \
-    --nthreads 16 --n_cpus 16 \
+    --nthreads 8 --n_cpus 16 \
     --bold2t1w-dof 12 \
     --longitudinal \
     --output-space template --template MNI152NLin2009cAsym \
     --debug  --ignore slicetiming \
-    -w /home_dir/projects/niblab/bids_projects/Experiments/bbx/fmriprep/$id/ses-1 \
+    -w /home_dir/Experiments/bbx/fmriprep/$sub/ses-1 \
     --resource-monitor --write-graph --stop-on-first-crash
