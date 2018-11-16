@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+#SBATCH --job-name=BX_S2_p1
+#SBATCH -N 1
+#SBATCH -c 1
+#SBATCH -t 12:00:00
+#SBATCH --mem-per-cpu 100000
+## %A == SLURM_ARRAY_JOB_ID
+## %a == SLURM_ARRAY_TASK_ID
+#SBATCH -o /projects/niblab/bids_projects/Experiments/bbx/error_files/fprep_%A_%a_ses-2_out.txt
+#SBATCH -e /projects/niblab/bids_projects/Experiments/bbx/error_files/fprep_%a_ses-2_err.txt
+
+
+id="sub-00${SLURM_ARRAY_TASK_ID}"
+
+
+singularity exec -B /:/home_dir /projects/niblab/bids_projects/Singularity_Containers/fmriprep.simg fmriprep /home_dir/projects/niblab/bids_projects/Experiments/bbx/BIDS/ses-2 /home_dir/projects/niblab/bids_projects/Experiments/bbx/fmriprep/$id/ses-2 \
+    participant  \
+    --participant-label $id  \
+    --fs-license-file /home_dir/projects/niblab/bids_projects/freesurfer/license.txt \
+    --fs-no-reconall \
+    --omp-nthreads 16 --n_cpus 16 \
+    --bold2t1w-dof 12 \
+    --longitudinal \
+    --output-space template --template MNI152NLin2009cAsym \
+    --debug  --ignore slicetiming \
+    -w /home_dir/projects/niblab/bids_projects/Experiments/bbx/fmriprep/$id/ses-2 \
+    --resource-monitor --write-graph --stop-on-first-crash
